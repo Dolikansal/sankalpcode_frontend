@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router';
 import Editor from '@monaco-editor/react';
+import Editorial from '../components/edit.jsx';
 import axiosclient from "../utils/axiosclient";
 import {
   FiChevronLeft, FiPlay, FiSend, FiTerminal,
@@ -27,7 +28,7 @@ const ProblemPage = () => {
   const [loading, setLoading] = useState(true);
   // UI States ke section mein add karein
   const [selectedCase, setSelectedCase] = useState(0);
-
+  // const [activeTab, setActiveTab] = useState('description');
   // Results States
   const [runResult, setRunResult] = useState(null);
   const [submitResult, setSubmitResult] = useState(null);
@@ -89,7 +90,9 @@ const ProblemPage = () => {
       setLoading(true);
       try {
         const response = await axiosclient.get(`/problem/problemById/${problemId}`);
-        const data = response.data;
+        // const data = response.data;
+        // Backend response wrap handle karein (data, problem ya direct object)
+        const data = response.data?.problem || response.data?.data || response.data;
         setProblem(data);
 
         const startCodeArray = data.startcode || data.startCode || [];
@@ -284,9 +287,14 @@ const ProblemPage = () => {
                     <h2 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
                       <FiBookOpen className="text-indigo-400" /> Editorial
                     </h2>
-                    <p className="text-slate-400 leading-relaxed italic">
-                      {problem.editorial?.content || "The detailed editorial for this problem is coming soon. Check back later!"}
-                    </p>
+                    <div className="space-y-4 animate-in fade-in duration-300">
+                      <Editorial
+                        secureurl={problem.secureurl}
+                        thumbnail={problem.thumbnail}
+                        duration={problem.duration}
+                        editorial={problem.editorial}
+                      />
+                    </div>
                   </div>
                 )}
 

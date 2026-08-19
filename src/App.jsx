@@ -13,6 +13,9 @@ import SubmissionHistory from "./components/updateadmin";
 import AdminDelete from "./components/deleteadmin";
 import InstructorPage from './pages/instr';
 import ProfilePage from './pages/profile';
+import AdminVideo from './components/videoadmin';
+import Adminuplaod from './components/uploadadmin';
+
 function App(){
 
   const {isauth , loading} = useSelector((state) => state.auth);
@@ -41,8 +44,10 @@ function App(){
         
         <Route path="/admin" element={isAdmin ? <Admin></Admin> : <Navigate to="/"></Navigate>}></Route>
         <Route path="/admin/create" element={isAdmin ? <AdminPanel /> : <Navigate to="/"></Navigate>} />
-        <Route path="/admin/update/:problemId?" element={isAdmin ? <SubmissionHistory /> : <Navigate to="/"></Navigate>}/>
+        <Route path="/admin/update/:problemid?" element={isAdmin ? <SubmissionHistory /> : <Navigate to="/"></Navigate>}/>
         <Route path="/admin/delete" element={isAdmin ? <AdminDelete /> : <Navigate to="/"></Navigate>}/>
+        <Route path="/admin/video" element={isAdmin ? <AdminVideo /> : <Navigate to="/"></Navigate>}/>
+        <Route path="/admin/upload/:problemid" element={isAdmin ? <Adminuplaod /> : <Navigate to="/"></Navigate>}/>
         <Route path='/problem/:problemId' element={<Problempage></Problempage>}></Route>
         <Route path='/profile' element={isauth ? <ProfilePage /> : <Navigate to="/signup" />} />
       </Routes>

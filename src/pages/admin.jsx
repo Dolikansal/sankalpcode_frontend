@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Edit, Trash2, ShieldCheck, ChevronRight, LayoutDashboard, Database, LogOut, User, ChevronDown } from 'lucide-react';
+import { Plus, Edit, Trash2, ShieldCheck, ChevronRight, LayoutDashboard, Database, LogOut, User, ChevronDown , Video } from 'lucide-react';
 import { NavLink } from 'react-router';
 
 function Admin() {
@@ -32,6 +32,15 @@ function Admin() {
       accent: 'text-rose-400',
       bgAccent: 'bg-rose-500/10',
       route: '/admin/delete'
+    },
+    {
+      id: 'video',
+      title: 'video solution of problems',
+      description: 'Upload and Delete videos of problems.',
+      icon: <Video size={22} />,
+      accent: 'text-rose-400',
+      bgAccent: 'bg-rose-500/10',
+      route: '/admin/video'
     }
   ];
 
