@@ -217,8 +217,25 @@ const ProblemPage = () => {
           >
             Chat AI
           </button>
-          <button onClick={handleRun} disabled={loading} className="btn btn-xs bg-[#1A1A1A] border-white/5 hover:bg-[#252525] text-slate-300 lowercase font-normal gap-2">
+          {/* <button onClick={handleRun} disabled={loading} className="btn btn-xs bg-[#1A1A1A] border-white/5 hover:bg-[#252525] text-slate-300 lowercase font-normal gap-2">
             <FiPlay size={12} className="text-emerald-500" /> Run
+          </button> */}
+          <button
+            onClick={handleRun}
+            disabled={loading}
+            className="btn btn-xs bg-[#1A1A1A] border-white/5 hover:bg-[#252525] text-slate-300 font-medium gap-2 disabled:opacity-50"
+          >
+            {loading ? (
+              <>
+                <span className="loading loading-spinner loading-xs text-emerald-400"></span>
+                <span className="text-emerald-400 text-xs lowercase">running...</span>
+              </>
+            ) : (
+              <>
+                <FiPlay size={12} className="text-emerald-500" />
+                <span className="lowercase">run</span>
+              </>
+            )}
           </button>
           <button onClick={handleSubmitCode} disabled={loading} className="btn btn-xs bg-indigo-600 hover:bg-indigo-500 border-none text-white lowercase font-bold gap-2">
             <FiSend size={12} /> Submit
@@ -522,6 +539,14 @@ const ProblemPage = () => {
             {/* Console Content Area */}
             {showConsole && (
               <div className="flex-1 overflow-y-auto p-4 bg-[#0A0A0A] font-mono text-[11px] scrollbar-hide">
+                {loading && (
+      <div className="h-full flex flex-col items-center justify-center gap-3 py-8 text-slate-400 animate-in fade-in duration-200">
+        <span className="loading loading-spinner loading-md text-indigo-500"></span>
+        <span className="text-xs uppercase tracking-widest font-mono text-slate-500 animate-pulse">
+          Executing Code & Running Testcases...
+        </span>
+      </div>
+    )}
                 {activeBottomTab === 'testcase' && runResult && (
                   <div className="flex flex-col h-full animate-in fade-in duration-300">
                     {/* Case Tabs */}
@@ -573,6 +598,7 @@ const ProblemPage = () => {
                     )}
                   </div>
                 )}
+                
                 {activeBottomTab === 'result' && submitResult && (
                   <div className="h-full animate-in slide-in-from-bottom-4 duration-500">
                     {submitResult.accepted ? (
