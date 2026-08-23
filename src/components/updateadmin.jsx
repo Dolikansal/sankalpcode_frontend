@@ -7,7 +7,7 @@ import axiosclient from '../utils/axiosclient';
 const ALL_TAGS = ['Array', 'String', 'Linked List', 'Dynamic Programming', 'Graph', 'Tree', 'Hash Table', 'Math', 'Backtracking', 'Design', 'Sorting', 'Greedy', 'Bit Manipulation', 'Two Pointers', 'Divide and Conquer'];
 
 const SubmissionHistory = () => {
-  const { problemId } = useParams();
+  const { problemid } = useParams();
   const navigate = useNavigate();
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,7 +20,7 @@ const SubmissionHistory = () => {
 
   // 1. Fetch All Problems
   useEffect(() => {
-    if (!problemId) {
+    if (!problemid) {
       const fetchAll = async () => {
         try {
           setLoading(true);
@@ -31,26 +31,26 @@ const SubmissionHistory = () => {
       };
       fetchAll();
     }
-  }, [problemId]);
+  }, [problemid]);
 
   // 2. Fetch Single Problem Data (Pre-fill form)
   useEffect(() => {
-    if (problemId && problemId !== "undefined") {
+    if (problemid && problemid !== "undefined") {
       const fetchOne = async () => {
         try {
           setLoading(true);
-          const res = await axiosclient.get(`/problem/problembyid/${problemId}`);
+          const res = await axiosclient.get(`/problem/problembyid/${problemid}`);
           reset(res.data);
         } catch (err) { console.error(err); }
         finally { setLoading(false); }
       };
       fetchOne();
     }
-  }, [problemId, reset]);
+  }, [problemid, reset]);
 
   const onUpdate = async (data) => {
     try {
-      await axiosclient.put(`/problem/update/${problemId}`, data);
+      await axiosclient.put(`/problem/update/${problemid}`, data);
       alert("Problem Sync Successful!");
       navigate('/admin/update');
     } catch (err) {
@@ -71,7 +71,7 @@ const SubmissionHistory = () => {
   );
 
   // --- UI PART 1: Selection List (Single Row Layout) ---
-  if (!problemId) {
+  if (!problemid) {
     return (
       <div className="min-h-screen bg-[#050505] flex flex-col">
         <header className="bg-[#0d1117] border-b border-primary px-10 py-6 shrink-0">
@@ -109,7 +109,8 @@ const SubmissionHistory = () => {
                         {p.difficulty}
                       </span>
                       <span className="text-[10px] text-gray-500 uppercase tracking-widest flex items-center gap-1">
-                        <Hash size={10} /> {p.tags}
+                        {/* <Hash size={10} /> {p.tags} */}
+                        <Hash size={10} /> {Array.isArray(p.tags) ? p.tags.join(', ') : p.tags}
                       </span>
                     </div>
                   </div>
@@ -136,7 +137,7 @@ const SubmissionHistory = () => {
             <button onClick={() => navigate('/admin/update')} className="p-2 hover:bg-[#161b22] rounded-full text-gray-500 hover:text-primary transition-all">
               <ArrowLeft size={18} />
             </button>
-            <span className="text-xs font-mono text-gray-500 tracking-wider">UPDATING::{problemId.slice(-6)}</span>
+            <span className="text-xs font-mono text-gray-500 tracking-wider">UPDATING::{problemid.slice(-6)}</span>
           </div>
         </div>
         <button
@@ -210,7 +211,7 @@ const SubmissionHistory = () => {
                     <button type="button" onClick={() => removeHidden(index)} className="text-purple-900 hover:text-red-500 opacity-0 group-hover:opacity-100"><Trash2 size={12} /></button>
                   </div>
                   <textarea {...register(`hiddentestcase.${index}.input`)} className="bg-transparent border-b border-[#30363d] w-full text-xs py-1 outline-none text-gray-400" placeholder="Hidden Input" />
-                  <textarea {...register(`hiddentestase.${index}.output`)} className="bg-transparent border-b border-[#30363d] w-full text-xs py-1 outline-none text-gray-400 mt-2" placeholder="Hidden Output" />
+                  <textarea {...register(`hiddentestcase.${index}.output`)} className="bg-transparent border-b border-[#30363d] w-full text-xs py-1 outline-none text-gray-400 mt-2" placeholder="Hidden Output" />
                 </div>
               ))}
               <button type="button" onClick={() => appendHidden({ input: '', output: '' })} className="w-full py-3 border border-dashed border-purple-900/20 text-[10px] text-gray-600 hover:text-purple-500 hover:border-purple-500 transition-all font-bold uppercase">
