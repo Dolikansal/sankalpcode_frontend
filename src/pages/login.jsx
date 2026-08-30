@@ -1,39 +1,3 @@
-// import {useForm} from "react-hook-form";
-// import {zodResolver} from "@hookform/resolvers/zod";
-// import {z} from "zod";
-
-// // schemavalidationf for signup 
-// const signupSchema = z.object({
-//     firstname: z.string().min(3, "First name must be at least 3 characters"),
-//     email: z.string().email("Invalid email address"),
-//     password: z.string().min(6, "Password must be at least 6 characters")
-// });
-
-// function Signup(){
-
-//     const {register, handleSubmit, formState: {errors}} = useForm({resolver: zodResolver(signupSchema)});
-//     const submitdata = (data) => {
-//         console.log("Form Data Submitted:", data);
-//         alert("Form submitted! Check console."); 
-//     };
-//     return(
-//         <>
-//         <form onSubmit={handleSubmit(submitdata)}>
-//             <input {...register('firstname')} placeholder="Enter your name" type="text"></input>
-//             {errors.firstname && <p style={{color: 'red'}}>{errors.firstname.message}</p>}
-//             <input {...register('email')} placeholder="enter your mail" type="email"></input>
-//             {errors.email && <p style={{color: 'red'}}>{errors.email.message}</p>}
-//             <input {...register('password')} placeholder="enter password" type="password"></input>
-//             {errors.password && <p style={{color: 'red'}}>{errors.password.message}</p>}
-//             <button type = "submit" className="btn btn-lg">Submit</button>
-//         </form>
-//         </>
-//     );
-// }
-
-// export default Signup;
-
-
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {useDispatch , useSelector} from 'react-redux';

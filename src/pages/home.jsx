@@ -3,7 +3,7 @@ import { NavLink } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import axiosclient from '../utils/axiosclient';
 import { logoutuser } from '../authslice';
-
+import { Sparkles } from 'lucide-react';
 function Home() {
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.auth);
@@ -58,13 +58,13 @@ function Home() {
 
     return (
         <div className="flex flex-col h-screen bg-[#0d1117] text-slate-200 overflow-hidden font-sans">
-            
+
             {/* TOP HEADER NAVBAR */}
             <header className="h-16 bg-[#161b22] border-b border-slate-800 flex items-center justify-between px-4 sm:px-6 z-30 shrink-0 shadow-md">
                 <div className="flex items-center gap-6">
                     <NavLink to="/" className="flex items-center gap-2 group">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-500 to-blue-600 flex items-center justify-center font-black text-white text-base shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform">
-                            S
+                        <div className="h-10 w-10 bg-indigo-600/20 border border-indigo-500/30 rounded-xl flex items-center justify-center text-indigo-400 font-bold shadow-[0_0_20px_rgba(99,102,241,0.25)] group-hover:scale-105 transition-transform duration-200">
+                            <Sparkles size={20} className="text-indigo-400" />
                         </div>
                         <span className="text-xl font-black tracking-tight text-white">
                             SANKALP<span className="text-indigo-500">CODE</span>
@@ -148,14 +148,14 @@ function Home() {
 
             {/* BODY LAYOUT: SIDEBAR + CONTENT */}
             <div className="flex flex-1 overflow-hidden">
-                
+
                 {/* PRO LEFT SIDEBAR */}
                 <aside className="w-64 bg-[#161b22] border-r border-slate-800 hidden md:flex flex-col justify-between p-4 shrink-0 overflow-y-auto">
                     <div className="space-y-6">
-                        
+
                         {/* Instructor Banner */}
-                        <NavLink 
-                            to="/instructor" 
+                        <NavLink
+                            to="/instructor"
                             className="group relative flex items-center justify-between p-3 rounded-xl bg-gradient-to-r from-indigo-950/40 to-slate-900 border border-indigo-500/30 hover:border-indigo-400 transition-all shadow-inner overflow-hidden"
                         >
                             <div className="flex items-center gap-2.5">
@@ -174,7 +174,7 @@ function Home() {
                         <div className="space-y-4">
                             <div className="flex items-center justify-between pb-1 border-b border-slate-800">
                                 <span className="text-xs font-bold tracking-wider text-slate-400 uppercase">Filters</span>
-                                <button 
+                                <button
                                     onClick={() => setfilters({ difficulty: "all", status: "all", tag: "all" })}
                                     className="text-[10px] text-indigo-400 hover:underline"
                                 >
@@ -235,7 +235,7 @@ function Home() {
                             <span className="text-indigo-400">{solvedCount} / {totalCount}</span>
                         </div>
                         <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                            <div 
+                            <div
                                 className="h-full bg-indigo-500 rounded-full transition-all duration-500"
                                 style={{ width: `${totalCount ? (solvedCount / totalCount) * 100 : 0}%` }}
                             ></div>
@@ -245,7 +245,7 @@ function Home() {
 
                 {/* MAIN CONTENT AREA */}
                 <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
-                    
+
                     {/* Top Stat Highlights */}
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
                         <div className="p-4 rounded-xl bg-[#161b22] border border-slate-800 flex flex-col justify-between">
@@ -291,7 +291,7 @@ function Home() {
 
                     {/* Problem Table List */}
                     <div className="bg-[#161b22] border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
-                        
+
                         {/* Table Header */}
                         <div className="grid grid-cols-12 gap-2 px-5 py-3.5 bg-slate-900/60 border-b border-slate-800 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
                             <div className="col-span-1 text-center">Status</div>
@@ -306,8 +306,8 @@ function Home() {
                                 filteredproblems.map((p, index) => {
                                     const isSolved = solvedproblem.some(sp => sp._id === p._id);
                                     return (
-                                        <div 
-                                            key={p._id} 
+                                        <div
+                                            key={p._id}
                                             className="grid grid-cols-12 gap-2 px-5 py-4 items-center hover:bg-slate-800/40 transition-colors group"
                                         >
                                             {/* Status Icon */}
@@ -325,13 +325,13 @@ function Home() {
 
                                             {/* Title & Tags */}
                                             <div className="col-span-6 sm:col-span-7 space-y-1">
-                                                <NavLink 
-                                                    to={`/problem/${p._id}`} 
+                                                <NavLink
+                                                    to={`/problem/${p._id}`}
                                                     className="text-sm sm:text-base font-semibold text-slate-100 group-hover:text-indigo-400 transition-colors line-clamp-1"
                                                 >
                                                     {p.title}
                                                 </NavLink>
-                                                
+
                                                 {p.tags && (
                                                     <div className="flex flex-wrap gap-1.5 items-center">
                                                         {(Array.isArray(p.tags) ? p.tags : [p.tags]).slice(0, 3).map((tag, tIdx) => (
@@ -352,8 +352,8 @@ function Home() {
 
                                             {/* Action Button */}
                                             <div className="col-span-2 text-right hidden sm:block">
-                                                <NavLink 
-                                                    to={`/problem/${p._id}`} 
+                                                <NavLink
+                                                    to={`/problem/${p._id}`}
                                                     className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-indigo-500 text-slate-300 hover:text-white border border-slate-700 hover:border-indigo-400 text-xs font-semibold transition-all duration-200 shadow-sm"
                                                 >
                                                     Solve

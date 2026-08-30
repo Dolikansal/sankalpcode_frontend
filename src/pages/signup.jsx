@@ -1,46 +1,10 @@
-// import {useForm} from "react-hook-form";
-// import {zodResolver} from "@hookform/resolvers/zod";
-// import {z} from "zod";
-
-// // schemavalidationf for signup 
-// const signupSchema = z.object({
-//     firstname: z.string().min(3, "First name must be at least 3 characters"),
-//     email: z.string().email("Invalid email address"),
-//     password: z.string().min(6, "Password must be at least 6 characters")
-// });
-
-// function Signup(){
-
-//     const {register, handleSubmit, formState: {errors}} = useForm({resolver: zodResolver(signupSchema)});
-//     const submitdata = (data) => {
-//         console.log("Form Data Submitted:", data);
-//         alert("Form submitted! Check console."); 
-//     };
-//     return(
-//         <>
-//         <form onSubmit={handleSubmit(submitdata)}>
-//             <input {...register('firstname')} placeholder="Enter your name" type="text"></input>
-//             {errors.firstname && <p style={{color: 'red'}}>{errors.firstname.message}</p>}
-//             <input {...register('email')} placeholder="enter your mail" type="email"></input>
-//             {errors.email && <p style={{color: 'red'}}>{errors.email.message}</p>}
-//             <input {...register('password')} placeholder="enter password" type="password"></input>
-//             {errors.password && <p style={{color: 'red'}}>{errors.password.message}</p>}
-//             <button type = "submit" className="btn btn-lg">Submit</button>
-//         </form>
-//         </>
-//     );
-// }
-
-// export default Signup;
-
-
 import { useForm } from "react-hook-form";
 import { Routes, Route, useNavigate } from 'react-router';
 import { useDispatch, useSelector } from 'react-redux';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useEffect, useState } from "react";
-import { registeruser } from "../authslice";
+import { registeruser , loginuser } from "../authslice";
 import { Eye, EyeOff } from 'lucide-react';
 import { Link } from "react-router";
 
@@ -79,6 +43,20 @@ function Signup() {
         }
     };
 
+    const handleGuestLogin = async (role) => {
+        const demoCredentials = {
+            user: { email: "guestuser19@gmail.com", password: "Guest_user@19" },
+            admin: { email: "guestadmin19@gmail.com", password: "Guest_admin@19" }
+        };
+    
+        try {
+            await dispatch(loginuser(demoCredentials[role])).unwrap();
+            // Login success hote hi aapka useEffect automatically navigate('/') kar dega
+        } catch (err) {
+            console.error("Guest login failed:", err);
+            alert("Guest login failed: " + (err.message || err));
+        }
+    };
     return (
         // Gradient: Black (TL) -> Blue-900 (Middle) -> White (BR)
         <div className="min-h-screen w-full bg-linear-to-br from-black via-blue-900 to-white flex items-center justify-center p-4 md:p-8">
@@ -177,7 +155,7 @@ function Signup() {
                             <button className="w-full py-4 bg-linear-to-r from-blue-600 to-blue-800 hover:from-blue-500 hover:to-blue-700 text-white font-bold rounded-xl shadow-xl transition-all active:scale-95 mt-4 tracking-wide">
                                 SIGN UP NOW
                             </button>
-                            <p className="text-zinc-400 text-sm mt-6 text-center">
+                            <p className="text-zinc-400 text-sm mt-2 text-center">
                                 Already have an account?{" "}
                                 <Link
                                     to="/login"
@@ -186,6 +164,30 @@ function Signup() {
                                     login
                                 </Link>
                             </p>
+                            {/* --- GUEST / DEMO ACCESS SECTION --- */}
+<div className="relative my-4 flex items-center justify-center">
+    <div className="border-t border-zinc-800 w-full"></div>
+    <span className="bg-zinc-950 px-3 text-xs text-zinc-500 uppercase tracking-widest absolute">
+        Or Quick Demo
+    </span>
+</div>
+
+<div className="grid grid-cols-2 gap-3 pt-2">
+    <button
+        type="button"
+        onClick={() => handleGuestLogin('user')}
+        className="w-full py-2.5 px-3 bg-zinc-900/80 hover:bg-zinc-800 border border-zinc-700/60 text-zinc-200 text-xs font-semibold rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5"
+    >
+        <span>👤</span> Guest User
+    </button>
+    <button
+        type="button"
+        onClick={() => handleGuestLogin('admin')}
+        className="w-full py-2.5 px-3 bg-zinc-900/80 hover:bg-zinc-800 border border-purple-500/40 text-purple-300 text-xs font-semibold rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5"
+    >
+        <span>⚡</span> Guest Admin
+    </button>
+</div>
                         </form>
 
                         <p className="text-center text-zinc-600 text-xs mt-6">

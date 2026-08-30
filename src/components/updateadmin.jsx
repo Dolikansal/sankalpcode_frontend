@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
-import { useParams, useNavigate } from 'react-router';
-import { Edit3, ChevronRight, Hash, Layout, Eye, EyeOff, Code2, Save, ArrowLeft, Trash2, Box } from 'lucide-react';
+import { useParams, useNavigate , NavLink  } from 'react-router';
+import { Edit3, ChevronRight, Hash, Layout, Eye, EyeOff,Sparkles, Code2, Save, ArrowLeft, Trash2, Box } from 'lucide-react';
 import axiosclient from '../utils/axiosclient';
+import Admin from '../pages/admin';
 
 const ALL_TAGS = ['Array', 'String', 'Linked List', 'Dynamic Programming', 'Graph', 'Tree', 'Hash Table', 'Math', 'Backtracking', 'Design', 'Sorting', 'Greedy', 'Bit Manipulation', 'Two Pointers', 'Divide and Conquer'];
 
@@ -74,12 +75,33 @@ const SubmissionHistory = () => {
   if (!problemid) {
     return (
       <div className="min-h-screen bg-[#050505] flex flex-col">
-        <header className="bg-[#0d1117] border-b border-primary px-10 py-6 shrink-0">
-          <h1 className="text-3xl font-black text-white italic uppercase tracking-tighter">
-            Sankalp<span className="text-primary not-italic">Code</span>
-          </h1>
-        </header>
+         <div className="sticky top-0 z-50 bg-[#0d1117]/90 backdrop-blur-xl border-b border-primary/20 px-6 sm:px-8 py-3.5 flex justify-between items-center">
+  {/* Left Side: Brand Logo + Text */}
+  <div className="flex items-center gap-3">
+    <div className="h-10 w-10 bg-indigo-600/20 border border-indigo-500/30 rounded-xl flex items-center justify-center text-indigo-400 font-bold shadow-[0_0_20px_rgba(99,102,241,0.25)] shrink-0">
+      <Sparkles size={20} className="text-indigo-400" />
+    </div>
+    
+    <NavLink to="/" className="text-xl font-black tracking-tight text-white flex items-center hover:opacity-90 transition-opacity">
+      SANKALP<span className="text-indigo-400">CODE</span>
+    </NavLink>
+  </div>
 
+  {/* Right Side: Back Button + Admin Tag */}
+  <div className="flex items-center gap-2 sm:gap-3">
+    <button 
+      onClick={() => navigate("/admin")} 
+      className="p-2 hover:bg-[#161b22] border border-transparent hover:border-slate-800 rounded-xl text-gray-400 hover:text-white transition-all cursor-pointer"
+      title="Go Back"
+    >
+      <ArrowLeft size={18} />
+    </button>
+    <div className="h-4 w-[1px] bg-slate-800 hidden sm:block" />
+    <span className="text-xs font-mono font-semibold text-indigo-400/90 uppercase tracking-widest px-2.5 py-1 rounded-md bg-indigo-500/10 border border-indigo-500/20">
+      Admin
+    </span>
+  </div>
+</div>
         <main className="flex-1 p-10 max-w-5xl mx-auto w-full">
           <div className="mb-10">
             <h2 className="text-gray-400 text-xs font-bold uppercase tracking-[0.3em] mb-2">Database Management</h2>

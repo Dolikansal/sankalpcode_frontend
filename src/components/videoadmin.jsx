@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import axiosClient from '../utils/axiosclient';
 import { useNavigate , NavLink } from 'react-router';
-import { Trash2, ArrowLeft, Code2, Hash, AlertTriangle, ShieldAlert } from 'lucide-react';
+import { Trash2, ArrowLeft, Code2, Hash, AlertTriangle, ShieldAlert , Sparkles} from 'lucide-react';
 // import { options } from '../../../leetcode_backend/src/routes/video';
 
 const AdminVideo = () => {
@@ -55,9 +55,12 @@ const AdminVideo = () => {
       {/* Header - Matching Create/Update Style */}
       <header className="sticky top-0 z-50 bg-[#0d1117]/90 backdrop-blur-xl border-b border-red-900/30 px-8 py-4 flex justify-between items-center">
         <div className="flex items-center gap-6">
-          <h1 className="font-black text-2xl tracking-tighter text-white uppercase italic">
-            Sankalp<span className="text-primary not-italic">Code</span>
-          </h1>
+        <div className="h-10 w-10 bg-indigo-600/20 border border-indigo-500/30 rounded-xl flex items-center justify-center text-indigo-400 font-bold shadow-[0_0_20px_rgba(99,102,241,0.25)]">
+                      <Sparkles size={20} className="text-indigo-400" />
+                    </div>
+          <NavLink to="/" className="text-xl font-black tracking-tight text-white flex items-center gap-1">
+            SANKALP<span className="text-indigo-400">CODE</span>
+          </NavLink>
           <div className="h-6 w-[1px] bg-gray-800"></div>
           <div className="flex items-center gap-3">
             <button onClick={() => navigate(-1)} className="p-2 hover:bg-[#161b22] rounded-full text-gray-500 hover:text-primary transition-all">

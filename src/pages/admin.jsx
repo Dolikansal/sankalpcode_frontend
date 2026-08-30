@@ -1,118 +1,163 @@
 import React, { useState } from 'react';
-import { Plus, Edit, Trash2, ShieldCheck, ChevronRight, LayoutDashboard, Database, LogOut, User, ChevronDown , Video } from 'lucide-react';
+import { 
+  Plus, 
+  Edit, 
+  Trash2, 
+  ShieldCheck, 
+  ChevronRight, 
+  LayoutDashboard, 
+  Database, 
+  LogOut, 
+  User, 
+  ChevronDown, 
+  Video,
+  Terminal,
+  Shield,
+  Code2,
+  Sparkles,
+  Cpu
+} from 'lucide-react';
 import { NavLink } from 'react-router';
+import { logoutuser } from '../authslice';
 
 function Admin() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  const handlelogout = () => {
+    dispatch(logoutuser());
+    setsolvedproblem([]);
+};
 
   const adminOptions = [
     {
       id: 'create',
       title: 'Create Problem',
-      description: 'Architect a new coding challenge with precise constraints and test cases.',
+      description: 'Architect new coding challenges with strict constraints and test case suites.',
       icon: <Plus size={22} />,
-      accent: 'text-cyan-400',
-      bgAccent: 'bg-cyan-500/10',
+      badge: 'Creation',
+      bgAccent: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+      borderAccent: 'hover:border-indigo-500/40',
+      btnStyle: 'hover:bg-indigo-600 hover:border-indigo-500 text-slate-200',
       route: '/admin/create'
     },
     {
       id: 'update',
       title: 'Update Problem',
-      description: 'Refine problem logic, optimize descriptions, or update existing test data.',
+      description: 'Refine problem descriptions, adjust time limits, or append test scenarios.',
       icon: <Edit size={22} />,
-      accent: 'text-blue-400',
-      bgAccent: 'bg-blue-500/10',
+      badge: 'Editor',
+      bgAccent: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+      borderAccent: 'hover:border-blue-500/40',
+      btnStyle: 'hover:bg-blue-600 hover:border-blue-500 text-slate-200',
       route: '/admin/update'
     },
     {
       id: 'delete',
       title: 'Delete Problem',
-      description: 'Safely decommission and remove challenges from the production database.',
+      description: 'Safely decommission obsolete challenges and clean production datasets.',
       icon: <Trash2 size={22} />,
-      accent: 'text-rose-400',
-      bgAccent: 'bg-rose-500/10',
+      badge: 'Danger',
+      bgAccent: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+      borderAccent: 'hover:border-rose-500/40',
+      btnStyle: 'hover:bg-rose-600 hover:border-rose-500 text-slate-200',
       route: '/admin/delete'
     },
     {
       id: 'video',
-      title: 'video solution of problems',
-      description: 'Upload and Delete videos of problems.',
+      title: 'Video Solutions',
+      description: 'Upload, manage, and attach video walkthroughs directly to problems.',
       icon: <Video size={22} />,
-      accent: 'text-rose-400',
-      bgAccent: 'bg-rose-500/10',
+      badge: 'Media',
+      bgAccent: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+      borderAccent: 'hover:border-amber-500/40',
+      btnStyle: 'hover:bg-amber-600 hover:border-amber-500 text-slate-200',
       route: '/admin/video'
     }
   ];
 
   return (
-    <div className="flex min-h-screen bg-[#020617] text-slate-300 font-sans antialiased">
+    <div className="flex min-h-screen bg-[#090d16] text-slate-300 font-sans antialiased selection:bg-indigo-500/30">
       
-      {/* Sidebar - Persistent Navigation */}
-      <aside className="w-64 bg-[#0f172a]/50 border-r border-slate-800/50 backdrop-blur-xl flex flex-col hidden md:flex sticky top-0 h-screen">
-        <div className="p-8 flex items-center gap-3">
-          <div className="h-9 w-9 bg-gradient-to-br from-primary to-blue-600 rounded-lg flex items-center justify-center text-white font-bold shadow-[0_0_15px_rgba(6,182,212,0.3)]">
+      {/* Sidebar */}
+      <aside className="w-64 bg-[#0d1322]/80 border-r border-slate-800/80 backdrop-blur-xl flex-col hidden md:flex sticky top-0 h-screen z-30">
+        <div className="p-6 flex items-center gap-3 border-b border-slate-800/60">
+          <div className="h-10 w-10 bg-indigo-600/20 border border-indigo-500/30 rounded-xl flex items-center justify-center text-indigo-400 font-bold shadow-[0_0_20px_rgba(99,102,241,0.25)]">
+            <Sparkles size={20} className="text-indigo-400" />
           </div>
-          {/* <span className="text-white font-bold tracking-tight text-xl">SankalpCode</span> */}
-          <NavLink to="/" className="text-2xl font-bold text-primary tracking-tight">
-                        SANKALP<span className="text-base-content">CODE</span>
-                    </NavLink>
+          <NavLink to="/" className="text-xl font-black tracking-tight text-white flex items-center gap-1">
+            SANKALP<span className="text-indigo-400">CODE</span>
+          </NavLink>
         </div>
         
-        <nav className="flex-1 px-4 space-y-2">
-          <NavLink 
-            to="/admin" 
-            className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive ? 'bg-cyan-500/10 text-primary border border-priamry' : 'hover:bg-slate-800 text-slate-400'}`}
-          >
-            <LayoutDashboard size={18} />
-            <span className="font-medium">Dashboard</span>
-          </NavLink>
+        <div className="px-4 py-5 flex-1">
+          <p className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase px-3 mb-2">Management</p>
+          <nav className="space-y-1.5">
+            <NavLink 
+              to="/admin" 
+              className={({ isActive }) => `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                isActive 
+                  ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]' 
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+              }`}
+            >
+              <LayoutDashboard size={18} />
+              <span>Dashboard</span>
+            </NavLink>
 
-          <NavLink 
-            to="/admin/problems" 
-            className={({ isActive }) => `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${isActive ? 'bg-cyan-500/10 text-primary border border-primary' : 'hover:bg-slate-800 text-slate-400'}`}
-          >
-            <Database size={18} />
-            <span className="font-medium">Problems</span>
-          </NavLink>
-        </nav>
+            <NavLink 
+              to="/admin/problems" 
+              className={({ isActive }) => `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
+                isActive 
+                  ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]' 
+                  : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
+              }`}
+            >
+              <Database size={18} />
+              <span>Problems</span>
+            </NavLink>
+          </nav>
+        </div>
 
-        <div className="p-6 border-t border-slate-800/50 text-[10px] font-mono text-slate-600 uppercase tracking-widest text-center">
-          Terminal v3.4.0 active
+        <div className="p-4 border-t border-slate-800/60 bg-[#0a0f1d]/50">
+          <div className="flex items-center justify-between px-2 py-1 text-xs text-slate-500">
+            <span>Terminal</span>
+            <span className="font-mono text-indigo-400">v3.4.0</span>
+          </div>
         </div>
       </aside>
 
-      {/* Content Area */}
-      <main className="flex-1 flex flex-col">
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col min-w-0">
         
-        {/* Header Bar */}
-        <header className="h-20 bg-[#020617]/80 border-b border-slate-800/50 backdrop-blur-md flex items-center justify-between px-10 sticky top-0 z-50">
-          <div className="flex items-center gap-3 text-sm font-medium text-slate-500">
-            <span className="hover:text-priamry cursor-pointer transition-colors">Admin</span>
-            <ChevronRight size={14} />
-            <span className="text-slate-100 font-semibold tracking-wide">Console</span>
+        {/* Header */}
+        <header className="h-16 bg-[#090d16]/80 border-b border-slate-800/80 backdrop-blur-md flex items-center justify-between px-6 lg:px-10 sticky top-0 z-40">
+          <div className="flex items-center gap-2 text-xs md:text-sm font-medium text-slate-500">
+            <span className="text-slate-400">Admin</span>
+            <ChevronRight size={14} className="text-slate-600" />
+            <span className="text-indigo-300 font-semibold bg-indigo-500/10 px-2 py-0.5 rounded-md border border-indigo-500/20">Control Center</span>
           </div>
 
           {/* Profile Dropdown */}
           <div className="relative">
             <button 
               onClick={() => setIsProfileOpen(!isProfileOpen)}
-              className="flex items-center gap-3 bg-slate-900 border border-slate-800 py-2 px-4 rounded-xl hover:border-slate-700 transition-all active:scale-95"
+              className="flex items-center gap-2.5 bg-slate-900/90 border border-slate-800/90 py-1.5 px-3 rounded-xl hover:border-indigo-500/40 hover:bg-slate-800/50 transition-all active:scale-95"
             >
-              <div className="h-8 w-8 rounded-lg bg-gradient-to-tr from-cyan-500/20 to-blue-500/20 flex items-center justify-center text-primary">
-                <User size={18} />
+              <div className="h-7 w-7 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center text-indigo-300">
+                <User size={15} />
               </div>
-              <span className="text-sm font-bold text-slate-200 uppercase tracking-tight">Admin</span>
-              <ChevronDown size={14} className={`text-slate-500 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
+              <span className="text-xs font-bold text-slate-200 uppercase tracking-wider">Admin</span>
+              <ChevronDown size={14} className={`text-slate-500 transition-transform duration-200 ${isProfileOpen ? 'rotate-180' : ''}`} />
             </button>
 
             {isProfileOpen && (
-              <div className="absolute right-0 mt-3 w-56 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl p-2 z-50 animate-in fade-in zoom-in duration-200">
-                <button className="flex items-center gap-3 w-full px-4 py-3 text-sm text-slate-300 hover:bg-slate-800 rounded-xl transition-colors">
-                  <User size={16} /> Profile
+              <div className="absolute right-0 mt-2 w-52 bg-[#0e1626] border border-slate-800 rounded-xl shadow-2xl p-1.5 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <button className="flex items-center gap-2.5 w-full px-3 py-2 text-xs font-medium text-slate-300 hover:bg-indigo-500/10 hover:text-indigo-300 rounded-lg transition-colors">
+                  <User size={15} /> Profile Info
                 </button>
-                <div className="h-[1px] bg-slate-800 my-1 mx-2"></div>
-                <button className="flex items-center gap-3 w-full px-4 py-3 text-sm text-rose-400 hover:bg-rose-500/10 rounded-xl transition-colors">
-                  <LogOut size={16} /> Log Out
+                <div className="h-[1px] bg-slate-800/80 my-1 mx-1"></div>
+                <button onClick={handlelogout} className="flex items-center gap-2.5 w-full px-3 py-2 text-xs font-medium text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors">
+                  <LogOut size={15} /> Log Out
                 </button>
               </div>
             )}
@@ -120,65 +165,104 @@ function Admin() {
         </header>
 
         {/* Dashboard Workspace */}
-        <div className="p-10 max-w-7xl">
-          <div className="mb-12">
-            <h1 className="text-4xl font-black text-white mb-3 tracking-tighter">
-              Admin <span className="text-primary uppercase">Dashboard</span>
-            </h1>
-            <p className="text-slate-500 max-w-2xl leading-relaxed">
-              Platform status is <span className="text-green-500 font-mono">OPTIMAL</span>. Use the modules below to manage the core repository of SankalpCode challenges.
-            </p>
+        <div className="p-6 md:p-8 lg:p-10 max-w-7xl w-full mx-auto space-y-8">
+          
+          {/* Header Description */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-800/50">
+            <div>
+              <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+                Admin <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-blue-400">Console</span>
+              </h1>
+              <p className="text-slate-400 text-sm mt-1">
+                Manage problem statements, algorithms, and media solutions for SankalpCode.
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-2 self-start md:self-auto bg-indigo-500/10 border border-indigo-500/20 px-3 py-1.5 rounded-xl text-xs font-mono text-indigo-300">
+              <Code2 size={14} />
+              <span>Workspace: Coding Engine</span>
+            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {adminOptions.map((option) => (
-              <div
-                key={option.id}
-                className="group relative bg-[#0f172a]/40 border border-slate-800 rounded-[2rem] p-1 transition-all duration-500 hover:border-cyan-500/30 overflow-hidden"
-              >
-                <div className="bg-[#020617]/60 rounded-[1.9rem] p-10 h-full flex flex-col backdrop-blur-sm">
-                  {/* Icon Area */}
-                  <div className={`${option.bgAccent} ${option.accent} w-14 h-14 rounded-2xl flex items-center justify-center mb-8 border border-slate-800 group-hover:scale-110 transition-transform duration-500`}>
-                    {option.icon}
-                  </div>
+          {/* Contextual Badges Bar (Realistic & Operational) */}
+          <div className="bg-[#0e1626]/60 border border-slate-800/80 rounded-2xl p-5 md:p-6 backdrop-blur-sm">
+  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+      <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">
+        Admin Control Center
+      </h2>
+      <p className="text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
+        Real-time telemetry, database audit logging, and core access controls are actively running under production protocols.
+      </p>
+    </div>
 
-                  <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
-                    {option.title}
-                  </h2>
-                  
-                  <p className="text-slate-500 text-sm mb-10 leading-relaxed">
-                    {option.description}
-                  </p>
+    <div className="flex items-center gap-2 self-start md:self-auto px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+      All Systems Operational
+    </div>
+  </div>
+</div>
+
+          {/* Action Modules */}
+          <div className="space-y-4">
+            <h2 className="text-xs font-semibold tracking-wider text-slate-400 uppercase">Management Modules</h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
+              {adminOptions.map((option) => (
+                <div
+                  key={option.id}
+                  className={`group relative bg-[#0e1626]/50 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between transition-all duration-300 hover:shadow-[0_8px_30px_rgba(0,0,0,0.3)] hover:-translate-y-0.5 ${option.borderAccent}`}
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center border ${option.bgAccent} transition-transform duration-300 group-hover:scale-105`}>
+                        {option.icon}
+                      </div>
+                      <span className="text-[10px] font-bold tracking-wider uppercase px-2 py-0.5 rounded-md bg-slate-900 border border-slate-800 text-slate-400">
+                        {option.badge}
+                      </span>
+                    </div>
+
+                    <h3 className="text-base font-bold text-white mb-2 tracking-tight group-hover:text-indigo-300 transition-colors">
+                      {option.title}
+                    </h3>
+                    
+                    <p className="text-slate-400 text-xs leading-relaxed mb-6">
+                      {option.description}
+                    </p>
+                  </div>
 
                   <NavLink
                     to={option.route}
-                    className="mt-auto flex items-center justify-between w-full py-4 px-6 rounded-2xl bg-slate-900 border border-slate-800 text-white font-bold text-xs uppercase tracking-[0.2em] hover:bg-primary hover:border-primary transition-all duration-300 group/btn"
+                    className={`w-full py-2.5 px-4 rounded-xl bg-slate-900/90 border border-slate-800 font-semibold text-xs flex items-center justify-between ${option.btnStyle} transition-all duration-200 group/btn`}
                   >
-                    Execute Module
-                    <ChevronRight size={16} className="transition-transform group-hover/btn:translate-x-1" />
+                    <span>Open Module</span>
+                    <ChevronRight size={14} className="text-slate-500 group-hover/btn:text-white group-hover/btn:translate-x-0.5 transition-transform" />
                   </NavLink>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
-          {/* Status Bar Card */}
-          <div className="mt-12 p-8 bg-gradient-to-r from-cyan-900/20 to-blue-900/10 border border-cyan-500/10 rounded-[2.5rem] flex flex-col md:flex-row items-center justify-between gap-6 overflow-hidden relative">
-            <div className="flex items-center gap-6">
-              <div className="h-16 w-16 bg-cyan-500/20 rounded-full flex items-center justify-center border border-cyan-500/30 animate-pulse">
-                <ShieldCheck size={32} className="text-cyan-400" />
+          {/* Security Banner */}
+          <div className="p-6 bg-gradient-to-r from-indigo-950/20 via-[#0e1626]/80 to-slate-900/40 border border-indigo-500/20 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-5">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
+                <ShieldCheck size={24} className="text-indigo-400" />
               </div>
               <div>
-                <h3 className="text-xl font-bold text-white">System Integrity: Secure</h3>
-                <p className="text-slate-500 text-sm">All changes to the production database are logged and encrypted.</p>
+                <h4 className="text-sm font-bold text-white tracking-tight">Security & Change Control</h4>
+                <p className="text-slate-400 text-xs mt-0.5">Problem set modifications and file uploads are tagged with admin credentials.</p>
               </div>
             </div>
-            <div className="flex gap-4">
-               <span className="px-4 py-2 bg-slate-900 border border-slate-800 rounded-xl text-[10px] font-mono text-slate-400 tracking-tighter">
-                 UPTIME: 100%
-               </span>
+            
+            <div className="flex items-center gap-3 shrink-0">
+              <span className="px-3 py-1.5 bg-slate-900/90 border border-slate-800 rounded-xl text-xs font-mono text-indigo-300">
+                Role: Authenticated
+              </span>
             </div>
           </div>
+
         </div>
       </main>
     </div>
