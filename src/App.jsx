@@ -15,6 +15,7 @@ import InstructorPage from './pages/instr';
 import ProfilePage from './pages/profile';
 import AdminVideo from './components/videoadmin';
 import Adminuplaod from './components/uploadadmin';
+import ProblemTopicChart from './components/problemchart';
 
 function App(){
 
@@ -50,6 +51,7 @@ function App(){
         <Route path="/admin/upload/:problemid" element={isAdmin ? <Adminuplaod /> : <Navigate to="/"></Navigate>}/>
         <Route path='/problem/:problemId' element={<Problempage></Problempage>}></Route>
         <Route path='/profile' element={isauth ? <ProfilePage /> : <Navigate to="/signup" />} />
+        <Route path="/admin/analytics" element={<ProblemTopicChart />} />
       </Routes>
     </>
   );

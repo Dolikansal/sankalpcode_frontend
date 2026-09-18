@@ -1,32 +1,33 @@
 import React, { useState } from 'react';
-import { 
-  Plus, 
-  Edit, 
-  Trash2, 
-  ShieldCheck, 
-  ChevronRight, 
-  LayoutDashboard, 
-  Database, 
-  LogOut, 
-  User, 
-  ChevronDown, 
+import {
+  Plus,
+  Edit,
+  Trash2,
+  ShieldCheck,
+  ChevronRight,
+  LayoutDashboard,
+  Database,
+  LogOut,
+  User,
+  ChevronDown,
   Video,
   Terminal,
   Shield,
   Code2,
   Sparkles,
-  Cpu
+  Cpu,
+  BarChart3
 } from 'lucide-react';
 import { NavLink } from 'react-router';
 import { logoutuser } from '../authslice';
-
+import ProblemTopicChart from '../components/problemchart';
 function Admin() {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const handlelogout = () => {
     dispatch(logoutuser());
     setsolvedproblem([]);
-};
+  };
 
   const adminOptions = [
     {
@@ -77,7 +78,7 @@ function Admin() {
 
   return (
     <div className="flex min-h-screen bg-[#090d16] text-slate-300 font-sans antialiased selection:bg-indigo-500/30">
-      
+
       {/* Sidebar */}
       <aside className="w-64 bg-[#0d1322]/80 border-r border-slate-800/80 backdrop-blur-xl flex-col hidden md:flex sticky top-0 h-screen z-30">
         <div className="p-6 flex items-center gap-3 border-b border-slate-800/60">
@@ -88,32 +89,30 @@ function Admin() {
             SANKALP<span className="text-indigo-400">CODE</span>
           </NavLink>
         </div>
-        
+
         <div className="px-4 py-5 flex-1">
           <p className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase px-3 mb-2">Management</p>
           <nav className="space-y-1.5">
-            <NavLink 
-              to="/admin" 
-              className={({ isActive }) => `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                isActive 
-                  ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]' 
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
+                  ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-              }`}
+                }`}
             >
               <LayoutDashboard size={18} />
               <span>Dashboard</span>
             </NavLink>
 
-            <NavLink 
-              to="/admin/problems" 
-              className={({ isActive }) => `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                isActive 
-                  ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]' 
+            <NavLink
+              to="/admin/analytics"
+              className={({ isActive }) => `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
+                  ? 'bg-indigo-500/15 text-indigo-300 border border-indigo-500/30 shadow-[0_0_15px_rgba(99,102,241,0.15)]'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
-              }`}
+                }`}
             >
-              <Database size={18} />
-              <span>Problems</span>
+              <BarChart3 size={18} />
+              <span>Analytics</span>
             </NavLink>
           </nav>
         </div>
@@ -128,7 +127,7 @@ function Admin() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0">
-        
+
         {/* Header */}
         <header className="h-16 bg-[#090d16]/80 border-b border-slate-800/80 backdrop-blur-md flex items-center justify-between px-6 lg:px-10 sticky top-0 z-40">
           <div className="flex items-center gap-2 text-xs md:text-sm font-medium text-slate-500">
@@ -139,7 +138,7 @@ function Admin() {
 
           {/* Profile Dropdown */}
           <div className="relative">
-            <button 
+            <button
               onClick={() => setIsProfileOpen(!isProfileOpen)}
               className="flex items-center gap-2.5 bg-slate-900/90 border border-slate-800/90 py-1.5 px-3 rounded-xl hover:border-indigo-500/40 hover:bg-slate-800/50 transition-all active:scale-95"
             >
@@ -166,7 +165,7 @@ function Admin() {
 
         {/* Dashboard Workspace */}
         <div className="p-6 md:p-8 lg:p-10 max-w-7xl w-full mx-auto space-y-8">
-          
+
           {/* Header Description */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-2 border-b border-slate-800/50">
             <div>
@@ -177,7 +176,7 @@ function Admin() {
                 Manage problem statements, algorithms, and media solutions for SankalpCode.
               </p>
             </div>
-            
+
             <div className="flex items-center gap-2 self-start md:self-auto bg-indigo-500/10 border border-indigo-500/20 px-3 py-1.5 rounded-xl text-xs font-mono text-indigo-300">
               <Code2 size={14} />
               <span>Workspace: Coding Engine</span>
@@ -186,27 +185,27 @@ function Admin() {
 
           {/* Contextual Badges Bar (Realistic & Operational) */}
           <div className="bg-[#0e1626]/60 border border-slate-800/80 rounded-2xl p-5 md:p-6 backdrop-blur-sm">
-  <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-    <div>
-      <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">
-        Admin Control Center
-      </h2>
-      <p className="text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
-        Real-time telemetry, database audit logging, and core access controls are actively running under production protocols.
-      </p>
-    </div>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div>
+                <h2 className="text-lg md:text-xl font-bold text-white tracking-tight">
+                  Admin Control Center
+                </h2>
+                <p className="text-sm text-slate-400 mt-1 max-w-2xl leading-relaxed">
+                  Real-time telemetry, database audit logging, and core access controls are actively running under production protocols.
+                </p>
+              </div>
 
-    <div className="flex items-center gap-2 self-start md:self-auto px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
-      <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-      All Systems Operational
-    </div>
-  </div>
-</div>
+              <div className="flex items-center gap-2 self-start md:self-auto px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                All Systems Operational
+              </div>
+            </div>
+          </div>
 
           {/* Action Modules */}
           <div className="space-y-4">
             <h2 className="text-xs font-semibold tracking-wider text-slate-400 uppercase">Management Modules</h2>
-            
+
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
               {adminOptions.map((option) => (
                 <div
@@ -226,7 +225,7 @@ function Admin() {
                     <h3 className="text-base font-bold text-white mb-2 tracking-tight group-hover:text-indigo-300 transition-colors">
                       {option.title}
                     </h3>
-                    
+
                     <p className="text-slate-400 text-xs leading-relaxed mb-6">
                       {option.description}
                     </p>
@@ -255,7 +254,7 @@ function Admin() {
                 <p className="text-slate-400 text-xs mt-0.5">Problem set modifications and file uploads are tagged with admin credentials.</p>
               </div>
             </div>
-            
+
             <div className="flex items-center gap-3 shrink-0">
               <span className="px-3 py-1.5 bg-slate-900/90 border border-slate-800 rounded-xl text-xs font-mono text-indigo-300">
                 Role: Authenticated
