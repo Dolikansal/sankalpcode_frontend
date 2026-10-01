@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const axiosclient = axios.create({
-    // baseURL: "https://sankalpcode-backend.onrender.com",
-    baseURL: 'http://localhost:3001',
+    baseURL: "https://sankalpcode-backend.onrender.com",
+    // baseURL: 'http://localhost:3001',
     withCredentials: true, // Cookies handle karne ke liye sahi hai
     headers: { // 'headers' small letters mein hona chahiye
         "Content-Type": "application/json"
