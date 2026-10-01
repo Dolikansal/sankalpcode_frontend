@@ -34,7 +34,8 @@ function AdminPanel() {
       startcode: [{ language: 'C++', initialcode: '' }, { language: 'Java', initialcode: '' }, { language: 'JavaScript', initialcode: '' }],
       referencesolution: [{ language: 'C++', completecode: '' }, { language: 'Java', completecode: '' }, { language: 'JavaScript', completecode: '' }],
       visibletestcase: [{ input: '', output: '', explanation: '' }],
-      hiddentestcase: [{ input: '', output: '' }]
+      hiddentestcase: [{ input: '', output: '' }],
+      score: 5
     }
   });
 
@@ -107,6 +108,18 @@ function AdminPanel() {
                     <option value="Hard">Hard</option>
                   </select>
                 </div>
+                <div>
+  <label className="text-xs text-primary font-medium block mb-2 uppercase tracking-tight">
+    Score
+  </label>
+  <input 
+    {...register('score', { valueAsNumber: true })} 
+    type="number" 
+    defaultValue={5} 
+    className={inputClasses} 
+    placeholder="Enter score..." 
+  />
+</div>
                 {/* <div> */}
                   {/* <label className="text-xs text-primary font-medium block mb-2 uppercase tracking-tight">Classification</label> */}
                   {/* <select {...register('tags')} className={inputClasses}>

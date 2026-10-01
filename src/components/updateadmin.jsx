@@ -200,6 +200,15 @@ const SubmissionHistory = () => {
                 <label className="text-[10px] text-gray-500 ml-1">PROBLEM DESCRIPTION</label>
                 <textarea {...register('description')} rows={12} className={`${inputClasses} font-mono text-xs leading-relaxed`} />
               </div>
+              <div className="space-y-1">
+                <label className="text-[10px] text-gray-500 ml-1">Score</label>
+                <input 
+  {...register('score', { valueAsNumber: true })} 
+  type="number" 
+  className={inputClasses} 
+  placeholder="Enter score for the problem..." 
+/>
+              </div>
             </div>
           </section>
 

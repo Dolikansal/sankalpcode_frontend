@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router';
 import Editor from '@monaco-editor/react';
 import Editorial from '../components/edit.jsx';
+import { toast } from 'react-toastify';
 import axiosclient from "../utils/axiosclient";
 import {
   FiChevronLeft, FiPlay, FiSend, FiTerminal,
@@ -90,6 +91,7 @@ const ProblemPage = () => {
       setLoading(true);
       try {
         const response = await axiosclient.get(`/problem/problemById/${problemId}`);
+        console.log("API Response Data:", response.data);
         // const data = response.data;
         // Backend response wrap handle karein (data, problem ya direct object)
         const data = response.data?.problem || response.data?.data || response.data;
@@ -155,6 +157,53 @@ const ProblemPage = () => {
     }
   };
 
+  // const handleSubmitCode = async () => {
+  //   setLoading(true);
+  //   setShowConsole(true);
+  //   setActiveBottomTab('result');
+  //   setSubmitResult(null);
+
+  //   try {
+  //     const res = await axiosclient.post(`/submission/submit/${problemId}`, {
+  //       code,
+  //       language: selectedLanguage
+  //     });
+  //     const { submission, isFirstSolve, scoreAwarded, totalScore } = res.data;
+  //     // Logic improvement: Normalize result to ensure UI doesn't crash
+  //     const data = res.data;
+  //     setSubmitResult({
+  //       accepted: data.status === 'accepted' || data.status?.id === 3,
+  //       runtime: data.runtime || data.time || "0",
+  //       memory: data.memory || "0",
+  //       totalCases: data.totalTestCases || data.testCasesTotal || 0,
+  //       passedCases: data.passedCount || 0,
+  //       errorMessage: data.errorMessage || data.message || "Compilation Error",
+  //       compileOutput: data.compile_output ? decodeBase64(data.compile_output) : null
+  //     });
+  //     if (submission?.status === 'accepted') {
+  //       if (isFirstSolve) {
+  //         // First Time Pass: Celebration Toast
+  //         toast.success(`🎉 Accepted! You earned +${scoreAwarded} points! Total Score: ${totalScore}`);
+  //       } else {
+  //         // Already Solved
+  //         toast.info(" Accepted! (Score pehle hi mil chuka hai)");
+  //       }
+  //     } else {
+  //       const statusText = submission?.status ? submission.status.toUpperCase() : "FAILED";
+  //       toast.error(`❌ ${statusText}: Check test cases`);
+  //     }
+  //     fetchSubmissions();
+  //   } catch (err) {
+  //     setSubmitResult({
+  //       accepted: false,
+  //       error: true,
+  //       errorMessage: "Server Connection Lost"
+  //     });
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleSubmitCode = async () => {
     setLoading(true);
     setShowConsole(true);
@@ -166,29 +215,42 @@ const ProblemPage = () => {
         code,
         language: selectedLanguage
       });
-
-      // Logic improvement: Normalize result to ensure UI doesn't crash
+      
       const data = res.data;
+      
+      // 👈 CHANGE: Response structural mapping update
       setSubmitResult({
         accepted: data.status === 'accepted' || data.status?.id === 3,
-        runtime: data.runtime || data.time || "0",
+        runtime: data.runtime || "0",
         memory: data.memory || "0",
-        totalCases: data.totalTestCases || data.testCasesTotal || 0,
+        totalCases: data.totalTestCases || 0,
         passedCases: data.passedCount || 0,
-        errorMessage: data.errorMessage || data.message || "Compilation Error",
+        errorMessage: data.errorMessage || "Compilation Error",
         compileOutput: data.compile_output ? decodeBase64(data.compile_output) : null
       });
+
+      if (data.status === 'accepted') {
+        if (data.isFirstSolve) {
+          toast?.success?.(`🎉 Accepted! Earned +${data.scoreAwarded} pts!`) || alert("Accepted!");
+        } else {
+          toast?.info?.("Accepted!") || console.log("Accepted");
+        }
+      } else {
+        toast?.error?.(`❌ Failed: Check test cases`);
+      }
+      
       fetchSubmissions();
     } catch (err) {
+      console.error("Submit Error:", err);
       setSubmitResult({
         accepted: false,
         error: true,
-        errorMessage: "Server Connection Lost"
+        errorMessage: err.response?.data?.message || "Server Connection Lost"
       });
     } finally {
       setLoading(false);
     }
-  };
+};
   if (loading && !problem) {
     return (
       <div className="h-screen bg-[#0A0A0A] flex items-center justify-center">
@@ -278,6 +340,9 @@ const ProblemPage = () => {
                         {problem.difficulty || problem.difficulty}
                       </span>
                       <span className="text-[10px] bg-white/5 px-2 py-0.5 rounded text-slate-400 border border-white/5">{problem.tags}</span>
+<span className="text-[10px] bg-white/5 px-2 py-0.5 rounded text-slate-400 border border-white/5">
+  {problem?.score ?? 5} PTS
+</span>
                     </div>
                     <div className="text-sm text-slate-400 whitespace-pre-wrap mb-8 leading-relaxed">
                       {problem.description}
