@@ -11,7 +11,8 @@ import {
   FiFileText, FiCode, FiAward, FiZap, FiLogOut
 } from 'react-icons/fi';
 
-const SOCKET_SERVER_URL = "http://localhost:3001"; // Socket Server Port
+// const SOCKET_SERVER_URL = "http://localhost:3001"; 
+const SOCKET_SERVER_URL = "https://sankalpcode-backend.onrender.com"; 
 // Helper function to decode Base64 strings safely
 const decodeBase64 = (str) => {
   if (!str) return "";
