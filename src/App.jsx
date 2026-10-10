@@ -16,6 +16,8 @@ import ProfilePage from './pages/profile';
 import AdminVideo from './components/videoadmin';
 import Adminuplaod from './components/uploadadmin';
 import ProblemTopicChart from './components/problemchart';
+import BattleModePage from './components/battlelobby';
+import BattleArenaPage from './pages/battlearena';
 
 function App(){
 
@@ -42,6 +44,8 @@ function App(){
         <Route path='/login' element={isauth ? <Navigate to = "/"></Navigate> : <Login></Login>} />
         <Route path='/signup' element={isauth? <Navigate to = "/"></Navigate> : <Signup></Signup>} />
         <Route path="/instructor" element={isauth ? <InstructorPage /> : <Navigate to="/signup" />} />
+        <Route path="/battle-mode" element={isauth ? <BattleModePage user={newuser} ></BattleModePage> : <Navigate to="/signup" />} />
+        <Route path="/battle-arena" element={isauth ? <BattleArenaPage user={newuser}></BattleArenaPage> : <Navigate to="/signup" />} />
         
         <Route path="/admin" element={isAdmin ? <Admin></Admin> : <Navigate to="/"></Navigate>}></Route>
         <Route path="/admin/create" element={isAdmin ? <AdminPanel /> : <Navigate to="/"></Navigate>} />

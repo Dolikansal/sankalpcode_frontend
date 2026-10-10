@@ -225,6 +225,47 @@ function Home() {
                                     ))}
                                 </select>
                             </div>
+                            <NavLink
+                                to="/battle-mode"
+                                className="group relative flex items-center justify-between p-3.5 rounded-xl bg-slate-900/90 border border-indigo-500/30 hover:border-indigo-400/80 transition-all duration-300 shadow-[0_0_15px_rgba(79,70,229,0.15)] hover:shadow-[0_0_25px_rgba(6,182,212,0.35)] overflow-hidden"
+                            >
+                                {/* Cyberpunk Top/Bottom Glow Accent Lines */}
+                                <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-cyan-400/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                                <div className="absolute -bottom-10 -right-10 w-24 h-24 bg-indigo-500/20 blur-xl group-hover:bg-cyan-500/30 transition-all duration-300 rounded-full pointer-events-none" />
+
+                                <div className="flex items-center gap-3 relative z-10">
+                                    {/* Gaming Icon with Glow Badge */}
+                                    <div className="relative w-9 h-9 rounded-lg bg-linear-to-br from-indigo-600/30 to-purple-800/40 border border-indigo-500/40 text-indigo-300 flex items-center justify-center font-black text-base shadow-inner group-hover:scale-105 group-hover:border-cyan-400 group-hover:text-indigo-200 transition-all duration-300">
+                                        🎮
+                                        {/* Live Pulsing Dot */}
+                                        <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500 border border-slate-900"></span>
+                                        </span>
+                                    </div>
+
+                                    <div className="text-left">
+                                        <div className="flex items-center gap-1.5">
+                                            <p className="text-xs font-black tracking-wider text-slate-100 group-hover:text-indigo-300 uppercase transition-colors">
+                                                1v1 Battle
+                                            </p>
+                                            <span className="text-[9px] font-extrabold px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                                                BET
+                                            </span>
+                                        </div>
+                                        <p className="text-[10px] font-medium text-slate-400 group-hover:text-slate-300 transition-colors">
+                                            Challenge Friends & Win Points 👑
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Cyber Arrow Accent */}
+                                <div className="relative z-10 flex items-center justify-center w-6 h-6 rounded-md bg-slate-800/80 border border-slate-700/60 group-hover:border-cyan-400/50 group-hover:bg-cyan-950/40 transition-all duration-300">
+                                    <span className="text-cyan-400 opacity-70 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all text-xs font-bold">
+                                        ➔
+                                    </span>
+                                </div>
+                            </NavLink>
                         </div>
                     </div>
 
