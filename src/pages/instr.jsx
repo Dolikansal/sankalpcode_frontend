@@ -8,6 +8,8 @@ function InstructorPage() {
     const [prompt, setPrompt] = useState("");
     const [chatHistory, setChatHistory] = useState([]);
     const [loading, setLoading] = useState(false);
+     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    
 
     const QUICK_PROMPTS = [
         "Explain Dynamic Programming with an approach framework.",
@@ -49,36 +51,85 @@ function InstructorPage() {
             <div className="absolute top-0 left-1/4 w-96 h-96 bg-indigo-500/5 rounded-full blur-3xl pointer-events-none -z-10" />
             <div className="absolute bottom-10 right-1/4 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl pointer-events-none -z-10" />
 
-           
-            <nav className="w-full bg-slate-900/80 border-b border-slate-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md">
-        {/* Left: Brand Logo */}
-        <NavLink to="/welcome" className="flex items-center gap-2 group">
-          <div className="h-10 w-10 bg-indigo-600/20 border border-indigo-500/30 rounded-xl flex items-center justify-center text-indigo-400 font-bold shadow-[0_0_20px_rgba(99,102,241,0.25)] group-hover:scale-105 transition-transform duration-200">
-            <Sparkles size={20} className="text-indigo-400" />
-          </div>
-          <span className="text-xl font-black tracking-tight text-white">
-            SANKALP<span className="text-indigo-500">CODE</span>
-          </span>
-        </NavLink>
-        {/* Right: Actions & Links */}
-        <div className="flex items-center gap-3 sm:gap-6 text-sm font-medium">
-          <Link to="/welcome" className="text-slate-300 hover:text-indigo-400 transition hidden sm:block">
-            Home
-          </Link>
-          <Link to="/battle-mode" className="text-slate-300 hover:text-indigo-400 transition">
-             BattleRoom
-          </Link>
-          <Link to="/instructor" className="text-slate-300 hover:text-indigo-400 transition hidden md:block">
-            Instructor
-          </Link>
-          <button
-            onClick={() => navigate('/dashboard')}
-            className="px-4 sm:px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-indigo-600/30 transition duration-200"
-          >
-            Dashboard
-          </button>
-        </div>
-      </nav>
+            <nav className="w-full bg-slate-900/90 border-b border-slate-800/80 px-4 sm:px-6 lg:px-8 py-3.5 sticky top-0 z-50 backdrop-blur-md">
+                            <div className="flex items-center justify-between">
+                                {/* Left: Brand Logo */}
+                                <NavLink to="/welcome" className="flex items-center gap-2 group shrink-0">
+                                    <div className="h-9 w-9 sm:h-10 sm:w-10 bg-indigo-600/20 border border-indigo-500/30 rounded-xl flex items-center justify-center text-indigo-400 font-bold shadow-[0_0_20px_rgba(99,102,241,0.25)] group-hover:scale-105 transition-transform duration-200 shrink-0">
+                                        <Sparkles size={18} className="text-indigo-400" />
+                                    </div>
+                                    <span className="text-base sm:text-xl font-black tracking-tight text-white truncate">
+                                        SANKALP<span className="text-indigo-500">CODE</span>
+                                    </span>
+                                </NavLink>
+                                
+                                {/* Right: Desktop Links */}
+                                <div className="hidden md:flex items-center gap-6 text-sm font-medium">
+                                    <Link to="/welcome" className="text-slate-300 hover:text-indigo-400 transition">
+                                        Home
+                                    </Link>
+                                    <Link to="/battle-mode" className="text-slate-300 hover:text-indigo-400 transition">
+                                        BattleRoom
+                                    </Link>
+                                    <Link to="/instructor" className="text-slate-300 hover:text-indigo-400 transition">
+                                        Instructor
+                                    </Link>
+                                    <button
+                                        onClick={() => navigate('/dashboard')}
+                                        className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-lg shadow-indigo-600/30 transition duration-200 shrink-0"
+                                    >
+                                        Dashboard
+                                    </button>
+                                </div>
+            
+                                {/* Right: Mobile Menu Toggle Button */}
+                                <div className="flex items-center gap-2 md:hidden">
+                                    <button
+                                        onClick={() => navigate('/dashboard')}
+                                        className="px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-semibold text-xs shadow-md shadow-indigo-600/30 shrink-0"
+                                    >
+                                        Dashboard
+                                    </button>
+                                    <button 
+                                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                        className="p-2 rounded-lg bg-slate-800 text-slate-300 hover:text-white border border-slate-700"
+                                        aria-label="Toggle Menu"
+                                    >
+                                        {isMenuOpen ? '✕' : '☰'}
+                                    </button>
+                                </div>
+                            </div>
+            
+                            {/* Mobile Dropdown Drawer */}
+                            {isMenuOpen && (
+                                <div className="md:hidden mt-3 pt-3 border-t border-slate-800/80 flex flex-col gap-3 text-xs font-medium bg-slate-900/95 p-4 rounded-xl border border-slate-800">
+                                    <Link 
+                                        to="/welcome" 
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="text-slate-300 hover:text-indigo-400 py-1 transition flex items-center justify-between"
+                                    >
+                                        <span>Home</span>
+                                        <span>→</span>
+                                    </Link>
+                                    <Link 
+                                        to="/battle-mode" 
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="text-slate-300 hover:text-indigo-400 py-1 transition flex items-center justify-between"
+                                    >
+                                        <span>BattleRoom</span>
+                                        <span>→</span>
+                                    </Link>
+                                    <Link 
+                                        to="/instructor" 
+                                        onClick={() => setIsMenuOpen(false)}
+                                        className="text-slate-300 hover:text-indigo-400 py-1 transition flex items-center justify-between"
+                                    >
+                                        <span>Instructor</span>
+                                        <span>→</span>
+                                    </Link>
+                                </div>
+                            )}
+                        </nav>
 
             {/* Main Interactive Interface Area */}
             <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 max-w-4xl w-full mx-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-slate-800 hover:scrollbar-thumb-slate-700 transition-all">
