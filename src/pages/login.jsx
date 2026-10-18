@@ -7,7 +7,7 @@ import { z } from "zod";
 import { loginuser } from "../authslice";
 import { Eye, EyeOff } from 'lucide-react';
 import { Link } from "react-router";
-
+import Welcome from "./welcome";
 
 const loginSchema = z.object({
     email: z.string().email("Invalid email address"),
@@ -25,7 +25,7 @@ function Login() {
 
     useEffect(()=>{
         if(isauth){
-            navigate('/')
+            navigate('/welcome')
         }
     } , [isauth , navigate])
     const submitdata = (data) => {

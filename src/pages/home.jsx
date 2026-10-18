@@ -72,9 +72,10 @@ function Home() {
                     </NavLink>
 
                     <div className="hidden md:flex items-center gap-2 pl-4 border-l border-slate-800 text-xs text-slate-400">
-                        <span className="px-2 py-0.5 rounded-full bg-slate-800 border border-slate-700 text-slate-300 font-medium">
+                        <NavLink to="/welcome">
+                        <span className="px-2 py-1.5 bg-slate-800 border border-slate-700 text-slate-300 font-medium rounded-[6px]">
                             Explore
-                        </span>
+                        </span></NavLink>
                         <span className="px-2 py-0.5 rounded-full bg-slate-800/50 hover:bg-slate-800 text-slate-400 font-medium transition-colors">
                             Problems
                         </span>

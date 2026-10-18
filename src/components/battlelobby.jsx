@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate , Link , NavLink } from 'react-router';
 import { socket } from '../socket';
+import { Sparkles } from 'lucide-react';
 
 const BattleModePage = ({ user, onBattleStart }) => {
   const navigate = useNavigate();
@@ -126,6 +127,36 @@ const BattleModePage = ({ user, onBattleStart }) => {
   };
 
   return (
+    <div>
+       <nav className="w-full bg-slate-900/80 border-b border-slate-800/80 px-4 sm:px-8 py-3.5 flex items-center justify-between sticky top-0 z-50 backdrop-blur-md">
+              {/* Left: Brand Logo */}
+              <NavLink to="/welcome" className="flex items-center gap-2 group">
+                <div className="h-10 w-10 bg-indigo-600/20 border border-indigo-500/30 rounded-xl flex items-center justify-center text-indigo-400 font-bold shadow-[0_0_20px_rgba(99,102,241,0.25)] group-hover:scale-105 transition-transform duration-200">
+                  <Sparkles size={20} className="text-indigo-400" />
+                </div>
+                <span className="text-xl font-black tracking-tight text-white">
+                  SANKALP<span className="text-indigo-500">CODE</span>
+                </span>
+              </NavLink>
+              {/* Right: Actions & Links */}
+              <div className="flex items-center gap-3 sm:gap-6 text-sm font-medium">
+                <Link to="/welcome" className="text-slate-300 hover:text-indigo-400 transition hidden sm:block">
+                  Home
+                </Link>
+                <Link to="/battle-mode" className="text-slate-300 hover:text-indigo-400 transition">
+                   BattleRoom
+                </Link>
+                <Link to="/instructor" className="text-slate-300 hover:text-indigo-400 transition hidden md:block">
+                  Instructor
+                </Link>
+                <button
+                  onClick={() => navigate('/dashboard')}
+                  className="px-4 sm:px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-indigo-600/30 transition duration-200"
+                >
+                  Dashboard
+                </button>
+              </div>
+            </nav>
     <div className="min-h-screen bg-slate-950 text-white flex items-center justify-center p-4 relative overflow-hidden font-sans select-none">
       {/* Background Animated Glow Gradients */}
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-600/20 blur-[120px] rounded-full pointer-events-none animate-pulse" />
@@ -391,7 +422,7 @@ const BattleModePage = ({ user, onBattleStart }) => {
         )}
 
       </div>
-    </div>
+    </div></div>
   );
 };
 

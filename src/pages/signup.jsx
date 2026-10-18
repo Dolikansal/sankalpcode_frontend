@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { registeruser , loginuser } from "../authslice";
 import { Eye, EyeOff } from 'lucide-react';
 import { Link } from "react-router";
+import Welcome from "./welcome";
 
 const signupSchema = z.object({
     firstname: z.string().min(3, "First name must be at least 3 characters"),
@@ -26,7 +27,7 @@ function Signup() {
 
     useEffect(() => {
         if (isauth) {
-            navigate('/')
+            navigate('/welcome')
         }
     }, [isauth, navigate])
 

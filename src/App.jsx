@@ -18,7 +18,7 @@ import Adminuplaod from './components/uploadadmin';
 import ProblemTopicChart from './components/problemchart';
 import BattleModePage from './components/battlelobby';
 import BattleArenaPage from './pages/battlearena';
-
+import Welcome from './pages/welcome';
 function App(){
 
   const {isauth , loading} = useSelector((state) => state.auth);
@@ -40,19 +40,21 @@ function App(){
   return (
     <>
       <Routes>
-        <Route path='/' element={isauth? <Home></Home> : <Navigate to="/signup"></Navigate>} />
-        <Route path='/login' element={isauth ? <Navigate to = "/"></Navigate> : <Login></Login>} />
-        <Route path='/signup' element={isauth? <Navigate to = "/"></Navigate> : <Signup></Signup>} />
+        <Route path='/' element={isauth? <Welcome></Welcome> : <Navigate to="/signup"></Navigate>} />
+        <Route path='/welcome' element={isauth ? <Welcome /> : <Navigate to="/signup" />} />
+        <Route path='/dashboard' element={isauth ? <Home /> : <Navigate to="/signup" />} />
+        <Route path='/login' element={isauth ? <Navigate to = "/welcome"></Navigate> : <Login></Login>} />
+        <Route path='/signup' element={isauth? <Navigate to = "/welcome"></Navigate> : <Signup></Signup>} />
         <Route path="/instructor" element={isauth ? <InstructorPage /> : <Navigate to="/signup" />} />
         <Route path="/battle-mode" element={isauth ? <BattleModePage user={newuser} ></BattleModePage> : <Navigate to="/signup" />} />
         <Route path="/battle-arena" element={isauth ? <BattleArenaPage user={newuser}></BattleArenaPage> : <Navigate to="/signup" />} />
         
-        <Route path="/admin" element={isAdmin ? <Admin></Admin> : <Navigate to="/"></Navigate>}></Route>
-        <Route path="/admin/create" element={isAdmin ? <AdminPanel /> : <Navigate to="/"></Navigate>} />
+        <Route path="/admin" element={isAdmin ? <Admin></Admin> : <Navigate to="/welcome"></Navigate>}></Route>
+        <Route path="/admin/create" element={isAdmin ? <AdminPanel /> : <Navigate to="/welcome"></Navigate>} />
         <Route path="/admin/update/:problemid?" element={isAdmin ? <SubmissionHistory /> : <Navigate to="/"></Navigate>}/>
-        <Route path="/admin/delete" element={isAdmin ? <AdminDelete /> : <Navigate to="/"></Navigate>}/>
-        <Route path="/admin/video" element={isAdmin ? <AdminVideo /> : <Navigate to="/"></Navigate>}/>
-        <Route path="/admin/upload/:problemid" element={isAdmin ? <Adminuplaod /> : <Navigate to="/"></Navigate>}/>
+        <Route path="/admin/delete" element={isAdmin ? <AdminDelete /> : <Navigate to="/welcome"></Navigate>}/>
+        <Route path="/admin/video" element={isAdmin ? <AdminVideo /> : <Navigate to="/welcome"></Navigate>}/>
+        <Route path="/admin/upload/:problemid" element={isAdmin ? <Adminuplaod /> : <Navigate to="/welcome"></Navigate>}/>
         <Route path='/problem/:problemId' element={<Problempage></Problempage>}></Route>
         <Route path='/profile' element={isauth ? <ProfilePage /> : <Navigate to="/signup" />} />
         <Route path="/admin/analytics" element={<ProblemTopicChart />} />
