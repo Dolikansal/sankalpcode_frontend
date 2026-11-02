@@ -6,21 +6,36 @@ import { Sparkles } from 'lucide-react';
 const BattleModePage = ({ user, onBattleStart }) => {
   const navigate = useNavigate();
   const [view, setView] = useState('MAIN'); // 'MAIN', 'CREATE', 'JOIN', 'WAITING'
-  const [betAmount, setBetAmount] = useState(20);
+  const [betAmount, setBetAmount] = useState(10);
   const [roomCodeInput, setRoomCodeInput] = useState('');
   const [activeRoom, setActiveRoom] = useState(null);
   const [errorMessage, setErrorMessage] = useState('');
  const [isMenuOpen, setIsMenuOpen] = useState(false);
     
-  const userBalance = user?.points ?? 1000;
-
+//  const [userBalance, setUserBalance] = useState(0);
+const [userBalance, setUserBalance] = useState(() => {
+  return user?.score ?? user?.points ?? (Number(localStorage.getItem('user_score')) || 0);
+});
+  console.log("Current User Object:", user);
+  console.log("Calculated User Balance:", userBalance);
   // 1. User Log Check
   useEffect(() => {
     if (user) {
       console.log("Current User in BattleModePage:", user);
     }
   }, [user?._id || user?.id]);
-
+// User prop change hone par score sync karo (Fallback 0 rakho taaki agar score na ho toh 0 dikhe)
+// 🔥 Yeh wala useEffect laga de BattleModePage mein
+useEffect(() => {
+  if (user) {
+    // Sirf tab update karo jab backend se valid score ya points mil raha ho
+    const currentScore = user.score ?? user.points;
+    if (typeof currentScore === 'number' && !isNaN(currentScore)) {
+      setUserBalance(currentScore);
+      localStorage.setItem('user_score', currentScore);
+    }
+  }
+}, [user]);
   // 2. Socket Listeners & Safe Cleanup Lifecycle
   useEffect(() => {
     if (!socket.connected) {
@@ -32,7 +47,13 @@ const BattleModePage = ({ user, onBattleStart }) => {
       setView('WAITING');
       setErrorMessage('');
     };
+    const handleBidWarning = (data) => {
+      setErrorMessage(data.message); // Host ke liye warning show karega
+    };
 
+    const handleJoinError = (errorMessage) => {
+      setErrorMessage(errorMessage); // Guest ke liye error show karega
+    };
     const handlePlayerJoined = (room) => {
       setActiveRoom(room);
       setView('WAITING'); // FIX: Guest player ko bhi waiting view par shift karna zaroori hai
@@ -55,13 +76,16 @@ const BattleModePage = ({ user, onBattleStart }) => {
     socket.on('player_joined', handlePlayerJoined);
     socket.on('battle_started', handleBattleStarted);
     socket.on('error_message', handleErrorMessage);
-
+    socket.on('bid_warning', handleBidWarning);
+    socket.on('join_error', handleJoinError);
     // FIX: Clean ONLY listeners on unmount. DO NOT call socket.disconnect()!
     return () => {
       socket.off('room_created', handleRoomCreated);
       socket.off('player_joined', handlePlayerJoined);
       socket.off('battle_started', handleBattleStarted);
       socket.off('error_message', handleErrorMessage);
+      socket.off('bid_warning', handleBidWarning);
+    socket.off('join_error', handleJoinError);
     };
   }, [navigate, onBattleStart, user]);
 
@@ -99,12 +123,14 @@ const BattleModePage = ({ user, onBattleStart }) => {
     }
 
     socket.emit('create_room', { 
-      user: { userId: uId, firstName: user?.firstName }, 
+      // user: { userId: uId, firstName: user?.firstName }, 
+      user: { userId: uId, firstname: user?.firstname },
       betAmount: numBet 
     });
   };
 
   const handleJoinRoom = () => {
+    console.log("🖱️ Join button clicked! Room code:", roomCodeInput);
     const uId = user?._id || user?.id;
     if (!uId) {
       setErrorMessage('User session missing! Please log in again.');
@@ -114,10 +140,11 @@ const BattleModePage = ({ user, onBattleStart }) => {
       setErrorMessage('Please enter a valid Room OTP!');
       return;
     }
-
+    console.log("🚀 Emitting join_room event to socket...");
     socket.emit('join_room', { 
       roomCode: roomCodeInput.trim(), 
-      user: { userId: uId, firstName: user?.firstName } 
+      // user: { userId: uId, firstName: user?.firstName } 
+      user: { userId: uId, firstname: user?.firstname }
     });
   };
 
@@ -294,30 +321,36 @@ const BattleModePage = ({ user, onBattleStart }) => {
                 <span className="absolute left-4 text-2xl">🪙</span>
                 
                 <input
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  value={betAmount === '' ? '' : betAmount}
-                  onChange={(e) => {
-                    const val = e.target.value.replace(/[^0-9]/g, '');
-                    if (val === '') {
-                      setBetAmount('');
-                    } else {
-                      const cleanNum = parseInt(val, 10);
-                      setBetAmount(cleanNum);
-                    }
-                  }}
-                  onBlur={() => {
-                    if (betAmount === '' || Number(betAmount) < 10) {
-                      setBetAmount(10);
-                    } else if (Number(betAmount) > userBalance) {
-                      setBetAmount(userBalance);
-                    }
-                  }}
-                  className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl py-3.5 pl-14 pr-10 text-2xl font-extrabold text-amber-400 focus:outline-none focus:border-amber-400/90 focus:ring-2 focus:ring-amber-400/20 transition-all font-mono"
-                  placeholder="50"
-                />
-
+  type="text"
+  inputMode="numeric"
+  pattern="[0-9]*"
+  value={betAmount === '' ? '' : betAmount}
+  onChange={(e) => {
+    const val = e.target.value.replace(/[^0-9]/g, '');
+    if (val === '') {
+      setBetAmount('');
+    } else {
+      const cleanNum = parseInt(val, 10);
+      // Agar entered amount user balance se zyada hai, toh max balance set kar do
+      if (cleanNum > userBalance) {
+        setBetAmount(userBalance);
+        setErrorMessage(`You can't bet more than your balance (${userBalance})!`);
+      } else {
+        setErrorMessage('');
+        setBetAmount(cleanNum);
+      }
+    }
+  }}
+  onBlur={() => {
+    if (betAmount === '' || Number(betAmount) < 10) {
+      setBetAmount(Math.min(10, userBalance)); // Agar balance 10 se kam hai toh handle karo
+    } else if (Number(betAmount) > userBalance) {
+      setBetAmount(userBalance);
+    }
+  }}
+  className="w-full bg-slate-900/90 border border-slate-700/80 rounded-xl py-3.5 pl-14 pr-10 text-2xl font-extrabold text-amber-400 focus:outline-none focus:border-amber-400/90 focus:ring-2 focus:ring-amber-400/20 transition-all font-mono"
+  placeholder="50"
+/>
                 {betAmount !== '' && (
                   <button
                     type="button"
@@ -330,28 +363,42 @@ const BattleModePage = ({ user, onBattleStart }) => {
               </div>
 
               <div className="flex items-center justify-between gap-2 pt-1">
-                {[25, 50, 100, 250].map((preset) => (
-                  <button
-                    key={preset}
-                    type="button"
-                    onClick={() => setBetAmount(preset)}
-                    className={`flex-1 py-2 rounded-xl text-xs font-extrabold border transition-all duration-200 ${
-                      Number(betAmount) === preset
-                        ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.25)]'
-                        : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
-                    }`}
-                  >
-                    +{preset}
-                  </button>
-                ))}
-                <button
-                  type="button"
-                  onClick={() => setBetAmount(userBalance)}
-                  className="py-2 px-3 rounded-xl text-xs font-extrabold bg-purple-500/20 border border-purple-500/40 text-purple-300 hover:bg-purple-500/30 transition-all shadow-inner"
-                >
-                  MAX
-                </button>
-              </div>
+  {[5, 10, 15, 20].map((preset) => {
+    const isDisabled = preset > userBalance;
+    return (
+      <button
+        key={preset}
+        type="button"
+        disabled={isDisabled}
+        onClick={() => {
+          if (!isDisabled) {
+            setBetAmount(preset);
+            setErrorMessage('');
+          }
+        }}
+        className={`flex-1 py-2 rounded-xl text-xs font-extrabold border transition-all duration-200 ${
+          isDisabled 
+            ? 'opacity-40 cursor-not-allowed bg-slate-900 border-slate-900 text-slate-600'
+            : Number(betAmount) === preset
+              ? 'bg-amber-500/20 border-amber-400 text-amber-300 shadow-[0_0_12px_rgba(245,158,11,0.25)]'
+              : 'bg-slate-900 border-slate-800 text-slate-400 hover:border-slate-700 hover:text-slate-200'
+        }`}
+      >
+        +{preset}
+      </button>
+    );
+  })}
+  <button
+    type="button"
+    onClick={() => {
+      setBetAmount(userBalance);
+      setErrorMessage('');
+    }}
+    className="py-2 px-3 rounded-xl text-xs font-extrabold bg-purple-500/20 border border-purple-500/40 text-purple-300 hover:bg-purple-500/30 transition-all shadow-inner"
+  >
+    MAX ({userBalance})
+  </button>
+</div>
             </div>
 
             <button
@@ -408,7 +455,7 @@ const BattleModePage = ({ user, onBattleStart }) => {
           <div className="space-y-6 text-center">
             <div className="bg-slate-950/80 border border-amber-500/30 p-6 rounded-2xl relative overflow-hidden shadow-inner">
               <div className="absolute top-0 right-0 px-3 py-1 bg-amber-500/20 text-amber-300 text-[10px] font-black uppercase rounded-bl-xl border-l border-b border-amber-500/30">
-                Prize Pool: {(activeRoom.betAmount * 2).toLocaleString()} Coins
+                Prize Pool: {(activeRoom.betAmount).toLocaleString()} Coins
               </div>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Share this OTP Code:</p>
               <p className="text-4xl sm:text-5xl font-mono font-black text-amber-400 tracking-widest selection:bg-amber-400 selection:text-black">
@@ -420,7 +467,7 @@ const BattleModePage = ({ user, onBattleStart }) => {
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Host</span>
                 <div className="flex items-center gap-2">
-                <span className="text-sm font-extrabold text-indigo-300">{activeRoom.host?.firstName || 'Host'}</span>
+                <span className="text-sm font-extrabold text-indigo-300">{activeRoom.host?.firstname ||activeRoom.host?.firstName || 'Host'}</span>
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">READY</span>
                 </div>
               </div>
@@ -429,7 +476,7 @@ const BattleModePage = ({ user, onBattleStart }) => {
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">Opponent</span>
                 {activeRoom.guest ? (
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-extrabold text-indigo-300">{activeRoom.guest?.firstName || 'Opponent'}</span>
+                    <span className="text-sm font-extrabold text-indigo-300">{ activeRoom.guest?.firstname || activeRoom.guest?.firstName || 'Opponent'}</span>
                     <span className="text-[10px] bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2 py-0.5 rounded font-bold">JOINED</span>
                   </div>
                 ) : (

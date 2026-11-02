@@ -85,18 +85,27 @@ const BattleArenaPage = ({ user }) => {
       if (fetchedProblem) setProblem(fetchedProblem);
     };
     const handleBattleOver = ({ winnerId, message, betAmount }) => {
+      const currentUserId = user?._id || user?.id;
+      const isWinner = String(winnerId) === String(currentUserId);
+    
       setWinnerInfo({
         winnerId,
-        message: message || "Match Over! Problem Solved.",
-        betAmount
+        message: message || (isWinner ? "🎉 You Won the Battle!" : "😢 You Lost the Battle!"),
+        betAmount,
+        isWinner
       });
-
-      toast.success(message || "Match Ended!");
-
+    
+      // Winner ke liye success toast aur Loser ke liye error toast
+      if (isWinner) {
+        toast.success(`🎉 Victory! You gained +${betAmount} coins!`);
+      } else {
+        toast.error(`😢 Defeat! You lost -${betAmount} coins.`);
+      }
+    
       // Redirection buffer (taaki socket backend room safely clean kar paaye)
       setTimeout(() => {
         navigate('/battle-mode', { replace: true });
-      }, 2000);
+      }, 2500); // 2.5 seconds taaki user result dekh sake
     };
     // Safe Listener Registration
     socket.off('match_closed').on('match_closed', handleMatchClosed);
@@ -180,7 +189,9 @@ const BattleArenaPage = ({ user }) => {
   try {
     const res = await axiosclient.post(`/submission/submit/${problem._id}`, {
       code,
-      language: selectedLanguage
+      language: selectedLanguage,
+      isBattle: true,
+      roomCode: roomCode
     });
 
     const data = res.data;
