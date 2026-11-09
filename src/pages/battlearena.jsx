@@ -60,7 +60,6 @@ const BattleArenaPage = ({ user }) => {
     });
     return matched ? (matched.initialcode || matched.initialCode) : '';
   };
-
   useEffect(() => {
     socketRef.current = socket;
     if (!roomCode) return;
@@ -69,55 +68,51 @@ const BattleArenaPage = ({ user }) => {
       socket.connect();
     }
   
-    // Socket join event
-    socket.emit('join_room', {
-      roomCode,
-      user: { userId: user?._id || user?.id, username: user?.firstname }
-    });
+    // Function to join room safely on connect/reconnect
+    const joinTheRoom = () => {
+      socket.emit('join_room', {
+        roomCode,
+        user: { userId: user?._id || user?.id, username: user?.firstname }
+      });
+    };
+
+    if (socket.connected) {
+      joinTheRoom();
+    }
+
+    // 🌟 RECONNECT FIX: Agar socket disconnect hokar wapas aaye toh room fir se join kar le
+    socket.on('connect', joinTheRoom);
   
     const handleMatchClosed = ({ message }) => {
       console.log("🔴 MATCH CLOSED EVENT RECEIVED:", message);
       toast.warn(message || 'Match closed!');
-      navigate('/battle-mode', { replace: true });
+      window.location.href = '/battle-mode';
     };
-  
-    const handleBattleStarted = ({ problem: fetchedProblem }) => {
-      if (fetchedProblem) setProblem(fetchedProblem);
-    };
+
     const handleBattleOver = ({ winnerId, message, betAmount }) => {
       const currentUserId = user?._id || user?.id;
       const isWinner = String(winnerId) === String(currentUserId);
     
-      setWinnerInfo({
-        winnerId,
-        message: message || (isWinner ? "🎉 You Won the Battle!" : "😢 You Lost the Battle!"),
-        betAmount,
-        isWinner
-      });
-    
-      // Winner ke liye success toast aur Loser ke liye error toast
       if (isWinner) {
         toast.success(`🎉 Victory! You gained +${betAmount} coins!`);
       } else {
         toast.error(`😢 Defeat! You lost -${betAmount} coins.`);
       }
     
-      // Redirection buffer (taaki socket backend room safely clean kar paaye)
       setTimeout(() => {
-        navigate('/battle-mode', { replace: true });
-      }, 2500); // 2.5 seconds taaki user result dekh sake
+        window.location.href = '/battle-mode';
+      }, 2000); 
     };
-    // Safe Listener Registration
+
     socket.off('match_closed').on('match_closed', handleMatchClosed);
-    socket.off('battle_started').on('battle_started', handleBattleStarted);
     socket.off('battle_over').on('battle_over', handleBattleOver);
   
     return () => {
+      socket.off('connect', joinTheRoom);
       socket.off('match_closed', handleMatchClosed);
-      socket.off('battle_started', handleBattleStarted);
       socket.off('battle_over', handleBattleOver);
     };
-  }, [roomCode, user, navigate]); // ONLY roomCode in dependency array!
+  }, [roomCode, user]); // Added user to dependency for safety
   // Manual Exit Function
   const handleExitMatch = () => {
     if (window.confirm("Kya aap match exit karna chahte hain? Match end ho jayega.")) {
@@ -178,8 +173,7 @@ const BattleArenaPage = ({ user }) => {
   }
 };
 
- // Submit Code Fix
- const handleSubmitCode = async () => {
+const handleSubmitCode = async () => {
   if (!problem?._id) return;
   setLoading(true);
   setShowConsole(true);
@@ -196,7 +190,7 @@ const BattleArenaPage = ({ user }) => {
 
     const data = res.data;
     
-    // Checking all possible success flags from backend
+    // Checking all possible success flags from backend (No functionality loss)
     const isAccepted = 
       data.status === 'accepted' || 
       data.status?.id === 3 || 
@@ -217,12 +211,14 @@ const BattleArenaPage = ({ user }) => {
       errorMessage: data.errorMessage || data.message || "Wrong Answer / Testcases Failed"
     });
 
-    // ✅ SAFE SOCKET RESOLUTION (No functionality loss)
+    // Socket Resolution & Mutual Exit Trigger
     const activeSocket = socketRef.current || socket;
     const currentUserId = user?._id || user?.id || user?.userId;
 
     if (activeSocket && roomCode) {
       console.log("Emitting submit_solution event...", { roomCode, isAccepted, currentUserId });
+      
+      // 1. Backend score & submission sync ke liye event
       activeSocket.emit('submit_solution', {
         roomCode: roomCode,
         userId: currentUserId,
@@ -230,6 +226,15 @@ const BattleArenaPage = ({ user }) => {
         passedCases: passedCount,
         totalCases: totalCases
       });
+
+      // 2. Agar solution accepted hai, toh room ke DONO users ke liye exit trigger bhej do
+      if (isAccepted) {
+        activeSocket.emit('force_win_exit', { roomCode });
+        toast.success(`🎉 Victory! Match Won! Redirecting...`);
+        setTimeout(() => {
+          window.location.href = '/battle-mode';
+        }, 1500);
+      }
     } else {
       console.error("Socket or RoomCode missing during submission!", { 
         roomCode, 
